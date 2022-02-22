@@ -25,6 +25,18 @@ public class GameManager : MonoBehaviour
         StartGame();
     }
 
+    public void Win()
+    {
+        GameStarted = false;
+        gameResult.text = "You Win!";
+    }
+
+    public void Lose()
+    {
+        GameStarted = false;
+        gameResult.text = "You Lose!";
+    }
+
     // очищаем кол-во очков и устанавливаем флаг начала игры
     public void StartGame()
     {
@@ -37,7 +49,7 @@ public class GameManager : MonoBehaviour
     }
 
     // добавляет очки
-    private void AddPoints(int points)
+    public void AddPoints(int points)
     {
         SetPoints(Points + points);
     }

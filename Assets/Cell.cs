@@ -12,6 +12,7 @@ public class Cell : MonoBehaviour
     public int Points => IsEmpty ? 0 : (int)Mathf.Pow(2, Value); // номинал плитки в игровом виде 
     public bool IsEmpty => Value == 0; // пуста€ плитка или нет
     public const int MaxValue = 11; // 2048
+    public bool HasMerged { get; private set; } // объедин€лась ли плитка с другой
 
     [SerializeField] private Image image; // дл€ смены цвета плитки
     [SerializeField] private TextMeshProUGUI points; // дл€ отображение номинала
@@ -23,6 +24,42 @@ public class Cell : MonoBehaviour
         Value = value;
 
         UpdateCell();
+    }
+
+    // вызываетс€ у той €чейки, в которую объедин€ютс€
+    public void IncreaseValue()
+    {
+        Value++;
+        HasMerged = true;
+        GameManager.Instance.AddPoints(Points);
+
+        UpdateCell(); //визуально отображаем изменени€
+    }
+
+    // вызываем дл€ всех плиток перед каждым ходом игрока
+    public void ResetFlags()
+    {
+        HasMerged = false;
+    }
+
+    // вызываетс€ у плитки, котора€ вливаетс€ в плитку своего номинала
+    // плитки не мен€ютс€, мен€ютс€ только значени€
+    public void MergeWithCell(Cell otherCell)
+    {
+        otherCell.IncreaseValue(); // значение удвоитс€
+        SetValue(X, Y, 0); // старое значение мен€ем на 0
+
+        UpdateCell(); // отображаем изменени€
+    }
+
+    // вызываетс€ при перемещении плитки в свободную €чейку
+    public void MoveToCell(Cell target)
+    {
+        target.SetValue(target.X, target.Y, Value); // плитке target задаЄм значение нашей плитки
+        SetValue(X, Y, 0); // старую плитку обнул€ем
+
+        UpdateCell();
+
     }
 
     // отображает номинал и измен€ет цвет плитки
