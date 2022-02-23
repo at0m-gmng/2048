@@ -17,13 +17,16 @@ public class Cell : MonoBehaviour
     [SerializeField] private Image image; // для смены цвета плитки
     [SerializeField] private TextMeshProUGUI points; // для отображение номинала
 
-    public void SetValue(int x, int y, int value)
+    private CellAnimation currentAnimation; // понадобится для остановки анимации
+
+    public void SetValue(int x, int y, int value, bool updateUI = true)
     {
         X = x;
         Y = y;
         Value = value;
 
-        UpdateCell();
+        if(updateUI) // можно изменять значения плитки, не отображая это визуально
+            UpdateCell();
     }
 
     // вызывается у той ячейки, в которую объединяются
@@ -33,7 +36,7 @@ public class Cell : MonoBehaviour
         HasMerged = true;
         GameManager.Instance.AddPoints(Points);
 
-        UpdateCell(); //визуально отображаем изменения
+        //UpdateCell(); //визуально отображаем изменения
     }
 
     // вызываем для всех плиток перед каждым ходом игрока
@@ -46,20 +49,23 @@ public class Cell : MonoBehaviour
     // плитки не меняются, меняются только значения
     public void MergeWithCell(Cell otherCell)
     {
+        CellAnimationController.Instance.SmoothTransition(this, otherCell, true);
+
         otherCell.IncreaseValue(); // значение удвоится
         SetValue(X, Y, 0); // старое значение меняем на 0
 
-        UpdateCell(); // отображаем изменения
+        //UpdateCell(); // отображаем изменения
     }
 
     // вызывается при перемещении плитки в свободную ячейку
     public void MoveToCell(Cell target)
     {
-        target.SetValue(target.X, target.Y, Value); // плитке target задаём значение нашей плитки
+        CellAnimationController.Instance.SmoothTransition(this, target, false);
+
+        target.SetValue(target.X, target.Y, Value, false); // плитке target задаём значение нашей плитки
         SetValue(X, Y, 0); // старую плитку обнуляем
-
-        UpdateCell();
-
+        
+        //UpdateCell();
     }
 
     // отображает номинал и изменяет цвет плитки
@@ -70,6 +76,17 @@ public class Cell : MonoBehaviour
         // устанавливаем цвета номинала и плитки в зависимости от value
         points.color = Value <= 2 ? ColorManager.Instance.PointsDarkColor : ColorManager.Instance.PointsLightColor; 
         image.color = ColorManager.Instance.CellColor[Value];
+    }
+
+    public void SetAnimation(CellAnimation animation)
+    {
+        currentAnimation = animation;
+    }
+
+    public void CancelAnimation()
+    {
+        if (currentAnimation != null)
+            currentAnimation.Destroy();
     }
 
 }

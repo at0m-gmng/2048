@@ -247,8 +247,9 @@ public class Field : MonoBehaviour
 
         int value = Random.Range(0, 10) == 0 ? 2 : 1; // 90% номинал 2, 10% номинал 4
         var cell = emptyCells[Random.Range(0, emptyCells.Count)]; // заносим значения в рандомную плитку
-        cell.SetValue(cell.X, cell.Y, value);
+        cell.SetValue(cell.X, cell.Y, value, false); // передаём false, чтобы не обновлять плитку визуально
 
+        CellAnimationController.Instance.SmoothAppear(cell);
     }
 
     private void ResetCellsFlags()
