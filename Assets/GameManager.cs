@@ -7,11 +7,11 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    public static int Points { get; private set; } // хранит кол-во очков
-    public static bool GameStarted { get; private set; } // флаг определяющий начало игры
+    public static int Points { get; private set; } // С…СЂР°РЅРёС‚ РєРѕР»-РІРѕ РѕС‡РєРѕРІ
+    public static bool GameStarted { get; private set; } // С„Р»Р°Рі РѕРїСЂРµРґРµР»СЏСЋС‰РёР№ РЅР°С‡Р°Р»Рѕ РёРіСЂС‹
 
     [SerializeField]
-    private TextMeshProUGUI gameResult; //результат игры
+    private TextMeshProUGUI gameResult; //СЂРµР·СѓР»СЊС‚Р°С‚ РёРіСЂС‹
     [SerializeField]
     private TextMeshProUGUI pointsText;
 
@@ -37,23 +37,23 @@ public class GameManager : MonoBehaviour
         gameResult.text = "You Lose!";
     }
 
-    // очищаем кол-во очков и устанавливаем флаг начала игры
+    // РѕС‡РёС‰Р°РµРј РєРѕР»-РІРѕ РѕС‡РєРѕРІ Рё СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј С„Р»Р°Рі РЅР°С‡Р°Р»Р° РёРіСЂС‹
     public void StartGame()
     {
         gameResult.text = "";
 
-        SetPoints(0); // обнуляем очки перед началом игры
+        SetPoints(0); // РѕР±РЅСѓР»СЏРµРј РѕС‡РєРё РїРµСЂРµРґ РЅР°С‡Р°Р»РѕРј РёРіСЂС‹
         GameStarted = true;
 
         Field.Instance.GenerateField();
     }
 
-    // добавляет очки
+    // РґРѕР±Р°РІР»СЏРµС‚ РѕС‡РєРё
     public void AddPoints(int points)
     {
         SetPoints(Points + points);
     }
-    // устанавливает очки и выводит на экран
+    // СѓСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РѕС‡РєРё Рё РІС‹РІРѕРґРёС‚ РЅР° СЌРєСЂР°РЅ
     private void SetPoints(int points)
     {
         Points = points;

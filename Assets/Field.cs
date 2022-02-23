@@ -7,20 +7,20 @@ public class Field : MonoBehaviour
     public static Field Instance;
 
     [Header("Fild Properties")]
-    public float CellSize; // размер плитки
-    public float Spacing; // отступ между плитками
-    public int FieldSize; // размер поля
-    public int InitCellsCount; // кол-во заполненных плиток 
+    public float CellSize; // СЂР°Р·РјРµСЂ РїР»РёС‚РєРё
+    public float Spacing; // РѕС‚СЃС‚СѓРї РјРµР¶РґСѓ РїР»РёС‚РєР°РјРё
+    public int FieldSize; // СЂР°Р·РјРµСЂ РїРѕР»СЏ
+    public int InitCellsCount; // РєРѕР»-РІРѕ Р·Р°РїРѕР»РЅРµРЅРЅС‹С… РїР»РёС‚РѕРє 
 
     [Space(10)]
     [SerializeField]
-    private Cell cellPref; // префаб плитки
+    private Cell cellPref; // РїСЂРµС„Р°Р± РїР»РёС‚РєРё
     [SerializeField]
     private RectTransform rt;
 
-    private Cell[,] field; // храним всё поле в двумерном массиве
+    private Cell[,] field; // С…СЂР°РЅРёРј РІСЃС‘ РїРѕР»Рµ РІ РґРІСѓРјРµСЂРЅРѕРј РјР°СЃСЃРёРІРµ
 
-    private bool anyCellMoved; // перемещалась ли плитка
+    private bool anyCellMoved; // РїРµСЂРµРјРµС‰Р°Р»Р°СЃСЊ Р»Рё РїР»РёС‚РєР°
 
     private void Awake()
     {
@@ -43,18 +43,18 @@ public class Field : MonoBehaviour
 #endif
     }
 
-    // вызывается при начале действий игроком
+    // РІС‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РЅР°С‡Р°Р»Рµ РґРµР№СЃС‚РІРёР№ РёРіСЂРѕРєРѕРј
     private void OnInput(Vector2 direction)
     {
-        if (!GameManager.GameStarted) // началась ли игра, если нет, выходим
+        if (!GameManager.GameStarted) // РЅР°С‡Р°Р»Р°СЃСЊ Р»Рё РёРіСЂР°, РµСЃР»Рё РЅРµС‚, РІС‹С…РѕРґРёРј
             return;
         anyCellMoved = false;
-        ResetCellsFlags(); // обнуляем у всех флаг anyCellMoved
+        ResetCellsFlags(); // РѕР±РЅСѓР»СЏРµРј Сѓ РІСЃРµС… С„Р»Р°Рі anyCellMoved
 
-        Move(direction); // anyCellMoved изменяется внутри Move
+        Move(direction); // anyCellMoved РёР·РјРµРЅСЏРµС‚СЃСЏ РІРЅСѓС‚СЂРё Move
 
-        // если хоть одна плитка переместилась, генерируем рандомную
-        // и вызываем проверку результата игры
+        // РµСЃР»Рё С…РѕС‚СЊ РѕРґРЅР° РїР»РёС‚РєР° РїРµСЂРµРјРµСЃС‚РёР»Р°СЃСЊ, РіРµРЅРµСЂРёСЂСѓРµРј СЂР°РЅРґРѕРјРЅСѓСЋ
+        // Рё РІС‹Р·С‹РІР°РµРј РїСЂРѕРІРµСЂРєСѓ СЂРµР·СѓР»СЊС‚Р°С‚Р° РёРіСЂС‹
         if (anyCellMoved)
         {
             GenerateRandomCell();
@@ -62,21 +62,21 @@ public class Field : MonoBehaviour
         }
     }
 
-    // логика совершения хода
+    // Р»РѕРіРёРєР° СЃРѕРІРµСЂС€РµРЅРёСЏ С…РѕРґР°
     private void Move(Vector2 direction)
     {
-        // если  x>0 (ход вправо) или y<0 (ход вниз)
-        // то startXY = размер поля - 1 = 3
-        // иначе индекс 0
+        // РµСЃР»Рё  x>0 (С…РѕРґ РІРїСЂР°РІРѕ) РёР»Рё y<0 (С…РѕРґ РІРЅРёР·)
+        // С‚Рѕ startXY = СЂР°Р·РјРµСЂ РїРѕР»СЏ - 1 = 3
+        // РёРЅР°С‡Рµ РёРЅРґРµРєСЃ 0
         int startXY = direction.x > 0 || direction.y < 0 ? FieldSize - 1 : 0;
 
-        // хранит значение направления хода
-        // если dir!=0, то походили горизонтально, присваиваем direction.x 
-        // иначе ход горизонтально, присваиваем direction.у 
+        // С…СЂР°РЅРёС‚ Р·РЅР°С‡РµРЅРёРµ РЅР°РїСЂР°РІР»РµРЅРёСЏ С…РѕРґР°
+        // РµСЃР»Рё dir!=0, С‚Рѕ РїРѕС…РѕРґРёР»Рё РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅРѕ, РїСЂРёСЃРІР°РёРІР°РµРј direction.x 
+        // РёРЅР°С‡Рµ С…РѕРґ РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅРѕ, РїСЂРёСЃРІР°РёРІР°РµРј direction.Сѓ 
         int dir = direction.x != 0 ? (int)direction.x : -(int)direction.y;
 
-        // в цикле проходимся по стобцам либо рядам
-        // определяем cell в зависимости от hor/vert
+        // РІ С†РёРєР»Рµ РїСЂРѕС…РѕРґРёРјСЃСЏ РїРѕ СЃС‚РѕР±С†Р°Рј Р»РёР±Рѕ СЂСЏРґР°Рј
+        // РѕРїСЂРµРґРµР»СЏРµРј cell РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ hor/vert
         for (int i = 0; i < FieldSize; i++)
         {
             for (int k = startXY; k >= 0 && k < FieldSize; k -=dir)
@@ -85,15 +85,15 @@ public class Field : MonoBehaviour
 
                 if (cell.IsEmpty)
                     continue;
-                var cellToMerge = FindCellToMerge(cell, direction); // найдём плитку для объединения
-                if(cellToMerge != null) // если она нашлась
+                var cellToMerge = FindCellToMerge(cell, direction); // РЅР°Р№РґС‘Рј РїР»РёС‚РєСѓ РґР»СЏ РѕР±СЉРµРґРёРЅРµРЅРёСЏ
+                if(cellToMerge != null) // РµСЃР»Рё РѕРЅР° РЅР°С€Р»Р°СЃСЊ
                 {
-                    cell.MergeWithCell(cellToMerge); // то вызываем MergeWithCell
+                    cell.MergeWithCell(cellToMerge); // С‚Рѕ РІС‹Р·С‹РІР°РµРј MergeWithCell
                     anyCellMoved = true;
                     continue;
                 }
-                // если плитка для объединения не нашлась
-                // ищем пустую для перемещения
+                // РµСЃР»Рё РїР»РёС‚РєР° РґР»СЏ РѕР±СЉРµРґРёРЅРµРЅРёСЏ РЅРµ РЅР°С€Р»Р°СЃСЊ
+                // РёС‰РµРј РїСѓСЃС‚СѓСЋ РґР»СЏ РїРµСЂРµРјРµС‰РµРЅРёСЏ
                 var emptyCell = FindEmptyCell(cell, direction);
                 if(emptyCell!=null)
                 {
@@ -105,31 +105,31 @@ public class Field : MonoBehaviour
 
     }
 
-    // поискл плитки для объединения
+    // РїРѕРёСЃРєР» РїР»РёС‚РєРё РґР»СЏ РѕР±СЉРµРґРёРЅРµРЅРёСЏ
     private Cell FindCellToMerge(Cell cell, Vector2 direction)
     {
-        // определяем Х и У первой след плитки по ходу движения
+        // РѕРїСЂРµРґРµР»СЏРµРј РҐ Рё РЈ РїРµСЂРІРѕР№ СЃР»РµРґ РїР»РёС‚РєРё РїРѕ С…РѕРґСѓ РґРІРёР¶РµРЅРёСЏ
         int startX = cell.X + (int)direction.x;
         int startY = cell.Y - (int)direction.y;
 
-        // в цикле проверяем, что не вышли за границы поля
+        // РІ С†РёРєР»Рµ РїСЂРѕРІРµСЂСЏРµРј, С‡С‚Рѕ РЅРµ РІС‹С€Р»Рё Р·Р° РіСЂР°РЅРёС†С‹ РїРѕР»СЏ
         for(int x = startX, y = startY; 
             x>=0 && x < FieldSize && y>=0 && y< FieldSize;
             x+= (int)direction.x, y-= (int)direction.y)
         {
             if (field[x, y].IsEmpty)
                 continue;
-            // если плитка не пустая, проверяем номинал
-            // в отношении нашей плитки и объединялась ли она на этом ходу 
+            // РµСЃР»Рё РїР»РёС‚РєР° РЅРµ РїСѓСЃС‚Р°СЏ, РїСЂРѕРІРµСЂСЏРµРј РЅРѕРјРёРЅР°Р»
+            // РІ РѕС‚РЅРѕС€РµРЅРёРё РЅР°С€РµР№ РїР»РёС‚РєРё Рё РѕР±СЉРµРґРёРЅСЏР»Р°СЃСЊ Р»Рё РѕРЅР° РЅР° СЌС‚РѕРј С…РѕРґСѓ 
             if (field[x, y].Value == cell.Value && !field[x, y].HasMerged)
                 return field[x, y];
 
             break;
         }
-        return null; // объединиться не с кем
+        return null; // РѕР±СЉРµРґРёРЅРёС‚СЊСЃСЏ РЅРµ СЃ РєРµРј
     }
 
-    // поиск пустой плитки для перемещения
+    // РїРѕРёСЃРє РїСѓСЃС‚РѕР№ РїР»РёС‚РєРё РґР»СЏ РїРµСЂРµРјРµС‰РµРЅРёСЏ
     private Cell FindEmptyCell(Cell cell, Vector2 direction)
     {
         Cell emptyCell = null;
@@ -137,7 +137,7 @@ public class Field : MonoBehaviour
         int startX = cell.X + (int)direction.x;
         int startY = cell.Y - (int)direction.y;
 
-        // если клетка пустая, заносим в emptyCell
+        // РµСЃР»Рё РєР»РµС‚РєР° РїСѓСЃС‚Р°СЏ, Р·Р°РЅРѕСЃРёРј РІ emptyCell
         for (int x = startX, y = startY; 
             x>=0 && x < FieldSize && y>=0 && y< FieldSize;
             x+= (int)direction.x, y-= (int)direction.y)
@@ -150,7 +150,7 @@ public class Field : MonoBehaviour
         return emptyCell;
     }
 
-    // проверка поля на состояние выигрыша/проигрыша
+    // РїСЂРѕРІРµСЂРєР° РїРѕР»СЏ РЅР° СЃРѕСЃС‚РѕСЏРЅРёРµ РІС‹РёРіСЂС‹С€Р°/РїСЂРѕРёРіСЂС‹С€Р°
     private void CheckGameResult()
     {
         bool lose = true;
@@ -158,13 +158,13 @@ public class Field : MonoBehaviour
         {
             for (int y = 0; y < FieldSize; y++)
             {
-                // если макс значение, то победа и выход
+                // РµСЃР»Рё РјР°РєСЃ Р·РЅР°С‡РµРЅРёРµ, С‚Рѕ РїРѕР±РµРґР° Рё РІС‹С…РѕРґ
                 if(field[x,y].Value == Cell.MaxValue)
                 {
                     GameManager.Instance.Win();
                     return;
                 }
-                // проверка на то, что проигрыш не настал
+                // РїСЂРѕРІРµСЂРєР° РЅР° С‚Рѕ, С‡С‚Рѕ РїСЂРѕРёРіСЂС‹С€ РЅРµ РЅР°СЃС‚Р°Р»
                 if( lose &&
                     field[x,y].IsEmpty 
                     || FindCellToMerge(field[x, y], Vector2.left)
@@ -176,28 +176,28 @@ public class Field : MonoBehaviour
                 }
             }
         }
-        // проигрыш
+        // РїСЂРѕРёРіСЂС‹С€
         if (lose)
             GameManager.Instance.Lose();
 
     }
 
-    //private void Start() // старт игры теперь контролирует GameController
+    //private void Start() // СЃС‚Р°СЂС‚ РёРіСЂС‹ С‚РµРїРµСЂСЊ РєРѕРЅС‚СЂРѕР»РёСЂСѓРµС‚ GameController
     //{
     //    GenerateField();
     //}
 
-    //создаём поле
+    //СЃРѕР·РґР°С‘Рј РїРѕР»Рµ
     private void CreateField()
     {
-        field = new Cell[FieldSize, FieldSize]; //инициализируем массив
-        float fieldWidth = FieldSize * (CellSize + Spacing) + Spacing; // считаем ширину поля
-        rt.sizeDelta = new Vector2(fieldWidth, fieldWidth); // устанавливаем размер на canvas
+        field = new Cell[FieldSize, FieldSize]; //РёРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј РјР°СЃСЃРёРІ
+        float fieldWidth = FieldSize * (CellSize + Spacing) + Spacing; // СЃС‡РёС‚Р°РµРј С€РёСЂРёРЅСѓ РїРѕР»СЏ
+        rt.sizeDelta = new Vector2(fieldWidth, fieldWidth); // СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЂР°Р·РјРµСЂ РЅР° canvas
 
-        float startX = -(fieldWidth / 2) + (CellSize / 2) + Spacing; // нач.позиции для первой клетки
+        float startX = -(fieldWidth / 2) + (CellSize / 2) + Spacing; // РЅР°С‡.РїРѕР·РёС†РёРё РґР»СЏ РїРµСЂРІРѕР№ РєР»РµС‚РєРё
         float startY =  (fieldWidth / 2) - (CellSize / 2) - Spacing;
 
-        //заполняем поле и создаём объекты по префабу
+        //Р·Р°РїРѕР»РЅСЏРµРј РїРѕР»Рµ Рё СЃРѕР·РґР°С‘Рј РѕР±СЉРµРєС‚С‹ РїРѕ РїСЂРµС„Р°Р±Сѓ
         for (int x = 0; x < FieldSize; x++)
         {
             for (int y = 0; y <FieldSize; y++ )
@@ -206,14 +206,14 @@ public class Field : MonoBehaviour
                 var position = new Vector2(startX + (x * (CellSize + Spacing)), startY - (y * (CellSize + Spacing)));
                 cell.transform.localPosition = position;
 
-                field[x, y] = cell; // созданный объект заносим в массив
+                field[x, y] = cell; // СЃРѕР·РґР°РЅРЅС‹Р№ РѕР±СЉРµРєС‚ Р·Р°РЅРѕСЃРёРј РІ РјР°СЃСЃРёРІ
 
-                cell.SetValue(x, y, 0); // передаём х и у плитке
+                cell.SetValue(x, y, 0); // РїРµСЂРµРґР°С‘Рј С… Рё Сѓ РїР»РёС‚РєРµ
             }
         }
     }
 
-    // очистка поля и подготовка к новой игре
+    // РѕС‡РёСЃС‚РєР° РїРѕР»СЏ Рё РїРѕРґРіРѕС‚РѕРІРєР° Рє РЅРѕРІРѕР№ РёРіСЂРµ
     public void GenerateField()
     {
         if (field == null)
@@ -227,7 +227,7 @@ public class Field : MonoBehaviour
             GenerateRandomCell();
     }
 
-    // генерация 2ух начальных плиток
+    // РіРµРЅРµСЂР°С†РёСЏ 2СѓС… РЅР°С‡Р°Р»СЊРЅС‹С… РїР»РёС‚РѕРє
     private void GenerateRandomCell()
     {
         var emptyCells = new List<Cell>(); 
@@ -235,13 +235,13 @@ public class Field : MonoBehaviour
         for (int x = 0; x < FieldSize; x++)
             for (int y = 0; y < FieldSize; y++)
                 if (field[x, y].IsEmpty)
-                    emptyCells.Add(field[x, y]); // добавляем в список все пустые клетки
+                    emptyCells.Add(field[x, y]); // РґРѕР±Р°РІР»СЏРµРј РІ СЃРїРёСЃРѕРє РІСЃРµ РїСѓСЃС‚С‹Рµ РєР»РµС‚РєРё
 
         if (emptyCells.Count == 0)
-            throw new System.Exception("There is no any empty cell!"); // проверка на пустые клетки
+            throw new System.Exception("There is no any empty cell!"); // РїСЂРѕРІРµСЂРєР° РЅР° РїСѓСЃС‚С‹Рµ РєР»РµС‚РєРё
 
-        int value = Random.Range(0, 10) == 0 ? 2 : 1; // 90% номинал 2, 10% номинал 4
-        var cell = emptyCells[Random.Range(0, emptyCells.Count)]; // заносим значения в рандомную плитку
+        int value = Random.Range(0, 10) == 0 ? 2 : 1; // 90% РЅРѕРјРёРЅР°Р» 2, 10% РЅРѕРјРёРЅР°Р» 4
+        var cell = emptyCells[Random.Range(0, emptyCells.Count)]; // Р·Р°РЅРѕСЃРёРј Р·РЅР°С‡РµРЅРёСЏ РІ СЂР°РЅРґРѕРјРЅСѓСЋ РїР»РёС‚РєСѓ
         cell.SetValue(cell.X, cell.Y, value);
 
     }

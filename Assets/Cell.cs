@@ -6,16 +6,16 @@ using TMPro;
 
 public class Cell : MonoBehaviour
 {
-    public int X { get; private set; } // X(hor) и Y(ver) расположение плитки в массиве
+    public int X { get; private set; } // X(hor) Рё Y(ver) СЂР°СЃРїРѕР»РѕР¶РµРЅРёРµ РїР»РёС‚РєРё РІ РјР°СЃСЃРёРІРµ
     public int Y { get; private set; }
-    public int Value { get; private set; } // номинал плитки в степени 2
-    public int Points => IsEmpty ? 0 : (int)Mathf.Pow(2, Value); // номинал плитки в игровом виде 
-    public bool IsEmpty => Value == 0; // пустая плитка или нет
+    public int Value { get; private set; } // РЅРѕРјРёРЅР°Р» РїР»РёС‚РєРё РІ СЃС‚РµРїРµРЅРё 2
+    public int Points => IsEmpty ? 0 : (int)Mathf.Pow(2, Value); // РЅРѕРјРёРЅР°Р» РїР»РёС‚РєРё РІ РёРіСЂРѕРІРѕРј РІРёРґРµ 
+    public bool IsEmpty => Value == 0; // РїСѓСЃС‚Р°СЏ РїР»РёС‚РєР° РёР»Рё РЅРµС‚
     public const int MaxValue = 11; // 2048
-    public bool HasMerged { get; private set; } // объединялась ли плитка с другой
+    public bool HasMerged { get; private set; } // РѕР±СЉРµРґРёРЅСЏР»Р°СЃСЊ Р»Рё РїР»РёС‚РєР° СЃ РґСЂСѓРіРѕР№
 
-    [SerializeField] private Image image; // для смены цвета плитки
-    [SerializeField] private TextMeshProUGUI points; // для отображение номинала
+    [SerializeField] private Image image; // РґР»СЏ СЃРјРµРЅС‹ С†РІРµС‚Р° РїР»РёС‚РєРё
+    [SerializeField] private TextMeshProUGUI points; // РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ РЅРѕРјРёРЅР°Р»Р°
 
     public void SetValue(int x, int y, int value)
     {
@@ -26,48 +26,48 @@ public class Cell : MonoBehaviour
         UpdateCell();
     }
 
-    // вызывается у той ячейки, в которую объединяются
+    // РІС‹Р·С‹РІР°РµС‚СЃСЏ Сѓ С‚РѕР№ СЏС‡РµР№РєРё, РІ РєРѕС‚РѕСЂСѓСЋ РѕР±СЉРµРґРёРЅСЏСЋС‚СЃСЏ
     public void IncreaseValue()
     {
         Value++;
         HasMerged = true;
         GameManager.Instance.AddPoints(Points);
 
-        UpdateCell(); //визуально отображаем изменения
+        UpdateCell(); //РІРёР·СѓР°Р»СЊРЅРѕ РѕС‚РѕР±СЂР°Р¶Р°РµРј РёР·РјРµРЅРµРЅРёСЏ
     }
 
-    // вызываем для всех плиток перед каждым ходом игрока
+    // РІС‹Р·С‹РІР°РµРј РґР»СЏ РІСЃРµС… РїР»РёС‚РѕРє РїРµСЂРµРґ РєР°Р¶РґС‹Рј С…РѕРґРѕРј РёРіСЂРѕРєР°
     public void ResetFlags()
     {
         HasMerged = false;
     }
 
-    // вызывается у плитки, которая вливается в плитку своего номинала
-    // плитки не меняются, меняются только значения
+    // РІС‹Р·С‹РІР°РµС‚СЃСЏ Сѓ РїР»РёС‚РєРё, РєРѕС‚РѕСЂР°СЏ РІР»РёРІР°РµС‚СЃСЏ РІ РїР»РёС‚РєСѓ СЃРІРѕРµРіРѕ РЅРѕРјРёРЅР°Р»Р°
+    // РїР»РёС‚РєРё РЅРµ РјРµРЅСЏСЋС‚СЃСЏ, РјРµРЅСЏСЋС‚СЃСЏ С‚РѕР»СЊРєРѕ Р·РЅР°С‡РµРЅРёСЏ
     public void MergeWithCell(Cell otherCell)
     {
-        otherCell.IncreaseValue(); // значение удвоится
-        SetValue(X, Y, 0); // старое значение меняем на 0
+        otherCell.IncreaseValue(); // Р·РЅР°С‡РµРЅРёРµ СѓРґРІРѕРёС‚СЃСЏ
+        SetValue(X, Y, 0); // СЃС‚Р°СЂРѕРµ Р·РЅР°С‡РµРЅРёРµ РјРµРЅСЏРµРј РЅР° 0
 
-        UpdateCell(); // отображаем изменения
+        UpdateCell(); // РѕС‚РѕР±СЂР°Р¶Р°РµРј РёР·РјРµРЅРµРЅРёСЏ
     }
 
-    // вызывается при перемещении плитки в свободную ячейку
+    // РІС‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РїРµСЂРµРјРµС‰РµРЅРёРё РїР»РёС‚РєРё РІ СЃРІРѕР±РѕРґРЅСѓСЋ СЏС‡РµР№РєСѓ
     public void MoveToCell(Cell target)
     {
-        target.SetValue(target.X, target.Y, Value); // плитке target задаём значение нашей плитки
-        SetValue(X, Y, 0); // старую плитку обнуляем
+        target.SetValue(target.X, target.Y, Value); // РїР»РёС‚РєРµ target Р·Р°РґР°С‘Рј Р·РЅР°С‡РµРЅРёРµ РЅР°С€РµР№ РїР»РёС‚РєРё
+        SetValue(X, Y, 0); // СЃС‚Р°СЂСѓСЋ РїР»РёС‚РєСѓ РѕР±РЅСѓР»СЏРµРј
 
         UpdateCell();
 
     }
 
-    // отображает номинал и изменяет цвет плитки
+    // РѕС‚РѕР±СЂР°Р¶Р°РµС‚ РЅРѕРјРёРЅР°Р» Рё РёР·РјРµРЅСЏРµС‚ С†РІРµС‚ РїР»РёС‚РєРё
     public void UpdateCell()
     {
-        points.text = IsEmpty ? string.Empty : Points.ToString(); // плитка пустая => текст пустая строка, иначе кол-во очков
+        points.text = IsEmpty ? string.Empty : Points.ToString(); // РїР»РёС‚РєР° РїСѓСЃС‚Р°СЏ => С‚РµРєСЃС‚ РїСѓСЃС‚Р°СЏ СЃС‚СЂРѕРєР°, РёРЅР°С‡Рµ РєРѕР»-РІРѕ РѕС‡РєРѕРІ
 
-        // устанавливаем цвета номинала и плитки в зависимости от value
+        // СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј С†РІРµС‚Р° РЅРѕРјРёРЅР°Р»Р° Рё РїР»РёС‚РєРё РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ value
         points.color = Value <= 2 ? ColorManager.Instance.PointsDarkColor : ColorManager.Instance.PointsLightColor; 
         image.color = ColorManager.Instance.CellColor[Value];
     }

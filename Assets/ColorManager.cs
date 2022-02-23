@@ -2,15 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// хранит массив всех возможных цветов плиток
+// С…СЂР°РЅРёС‚ РјР°СЃСЃРёРІ РІСЃРµС… РІРѕР·РјРѕР¶РЅС‹С… С†РІРµС‚РѕРІ РїР»РёС‚РѕРє
 public class ColorManager : MonoBehaviour
 {
     public static ColorManager Instance;
 
-    public Color[] CellColor; // хранит цвета плиток
+    public Color[] CellColor; // С…СЂР°РЅРёС‚ С†РІРµС‚Р° РїР»РёС‚РѕРє
 
     [Space(5)]
-    public Color PointsDarkColor; // у плиток 2 и 4 цвет тёмный, у остальных светлый
+    public Color PointsDarkColor; // Сѓ РїР»РёС‚РѕРє 2 Рё 4 С†РІРµС‚ С‚С‘РјРЅС‹Р№, Сѓ РѕСЃС‚Р°Р»СЊРЅС‹С… СЃРІРµС‚Р»С‹Р№
     public Color PointsLightColor;
 
 
