@@ -22,6 +22,11 @@ public class Field : MonoBehaviour
 
     private bool anyCellMoved; // перемещалась ли плитка
 
+    private void Start()
+    {
+        SwipeController.SwipeEvent += OnInput;
+    }
+
     private void Awake()
     {
         if (Instance == null)
