@@ -19,6 +19,17 @@ public class Cell : MonoBehaviour
 
     private CellAnimation currentAnimation; // понадобится для остановки анимации
 
+    //public float CellSize; // размер плитки
+    //public float Spacing; // отступ между плитками
+
+    //[SerializeField]
+    //private RectTransform rt;
+
+    //void Start()
+    //{
+
+    //}
+
     public void SetValue(int x, int y, int value, bool updateUI = true)
     {
         X = x;

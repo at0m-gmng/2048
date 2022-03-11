@@ -218,6 +218,28 @@ public class Field : MonoBehaviour
         }
     }
 
+    public void ClearField()
+    {
+        //if (field != null)
+        //{
+
+        //if (GameObject.Find("gameCell(Clone)"))
+        //    Destroy(GameObject.Find("gameCell(Clone)"));
+        foreach(Cell field in field)
+        {
+            Destroy(field.gameObject);
+        }
+        CreateField();
+        GenerateField();
+                //Destroy(GameObject.Find("gameCell(Clone)"));
+        //fieldCell = GameObject.Find("gameCell(Clone)");
+        //System.Array.Clear(field, 0, field.Length);
+
+        //Debug.Log(GameObject.Find("gameCell(Clone)"));
+        //CreateField();
+        //}
+    }
+
     // очистка поля и подготовка к новой игре
     public void GenerateField()
     {
