@@ -16,19 +16,17 @@ public class Cell : MonoBehaviour
 
     [SerializeField] private Image image; // для смены цвета плитки
     [SerializeField] private TextMeshProUGUI points; // для отображение номинала
+    [SerializeField] public float width; // для отображение номинала
 
     private CellAnimation currentAnimation; // понадобится для остановки анимации
 
-    //public float CellSize; // размер плитки
-    //public float Spacing; // отступ между плитками
+    RectTransform rt;
 
-    //[SerializeField]
-    //private RectTransform rt;
-
-    //void Start()
-    //{
-
-    //}
+    private void Start()
+    {
+        rt = GetComponent<RectTransform>();
+        rt.sizeDelta = new Vector2(width, width);
+    }
 
     public void SetValue(int x, int y, int value, bool updateUI = true)
     {

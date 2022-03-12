@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using System.Collections;
 
 //висит на объекте который создаётся и перемещается (анимация)
 public class CellAnimation : MonoBehaviour
@@ -14,9 +15,16 @@ public class CellAnimation : MonoBehaviour
 
     // для длительности анимации, перемещения и появления
     private float moveTime = .1f;
-    private float appearTime = .1f;
+    private float appearTime = .05f;
 
     private Sequence sequence; // переменная для очереди
+
+    RectTransform rt;
+    private void Start()
+    {
+        rt = GetComponent<RectTransform>();
+        rt.sizeDelta = new Vector2(Field.Instance.CellSize, Field.Instance.CellSize);
+    }
 
     // показывает анимация при перемещении из одной плитки в другую
     public void Move(Cell from, Cell to, bool isMerging)
@@ -58,7 +66,7 @@ public class CellAnimation : MonoBehaviour
     // вызывается, когда на поле появляется новая рандомная плитка
     public void Appear(Cell cell)
     {
-        cell.CancelAnimation(); // 
+        cell.CancelAnimation();
         cell.SetAnimation(this);
 
         image.color = ColorManager.Instance.CellColor[cell.Value];
@@ -84,5 +92,11 @@ public class CellAnimation : MonoBehaviour
     {
         sequence.Kill(); //остановит процесс анимации
         Destroy(gameObject);
+
+        // частино удаляем лишние объекты при быстром изменениии размерности
+        GameObject replay = GameObject.Find("gameCellAnimation(Clone)");
+        if (replay)
+            Destroy(replay);
     }
+
 }

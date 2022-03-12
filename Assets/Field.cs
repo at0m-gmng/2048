@@ -10,6 +10,7 @@ public class Field : MonoBehaviour
     public float CellSize; // размер плитки
     public float Spacing; // отступ между плитками
     public int FieldSize; // размер поля
+    private int minFieldSize = 3, maxFieldSize = 10; // min и max размерность поля
     public int InitCellsCount; // кол-во заполненных плиток 
 
     [Space(10)]
@@ -22,9 +23,13 @@ public class Field : MonoBehaviour
 
     private bool anyCellMoved; // перемещалась ли плитка
 
+
     private void Start()
     {
         SwipeController.SwipeEvent += OnInput;
+
+        cellPref.width = CellSize; // устанавливаем размер ячеек, если не задано, то берётся из инспектора
+        //cellPref.width = 100f; // устанавливаем размер ячеек, если не задано, то берётся из инспектора
     }
 
     private void Awake()
@@ -196,7 +201,16 @@ public class Field : MonoBehaviour
     private void CreateField()
     {
         field = new Cell[FieldSize, FieldSize]; //инициализируем массив
-        float fieldWidth = FieldSize * (CellSize + Spacing) + Spacing; // считаем ширину поля
+        float fieldWidth = 1000.0f;
+            //FieldSize * (CellSize + Spacing) + Spacing; // считаем ширину поля
+        if(fieldWidth >= 1000) // считаем размер клеток, когда размер поля максимально
+        {
+            fieldWidth = 1000f;
+            Spacing = fieldWidth * 0.02f;
+            CellSize = (fieldWidth - Spacing ) / FieldSize - Spacing ;
+            cellPref.width = CellSize ;
+        }
+
         rt.sizeDelta = new Vector2(fieldWidth, fieldWidth); // устанавливаем размер на canvas
 
         float startX = -(fieldWidth / 2) + (CellSize / 2) + Spacing; // нач.позиции для первой клетки
@@ -218,26 +232,20 @@ public class Field : MonoBehaviour
         }
     }
 
-    public void ClearField()
+    public void ClearField() // очищаем поле перед созданием нового, проверяем диапозон размерности
     {
-        //if (field != null)
-        //{
-
-        //if (GameObject.Find("gameCell(Clone)"))
-        //    Destroy(GameObject.Find("gameCell(Clone)"));
         foreach(Cell field in field)
         {
             Destroy(field.gameObject);
         }
+
+        if (FieldSize < minFieldSize)
+            FieldSize = minFieldSize;
+        else if (FieldSize > maxFieldSize)
+            FieldSize = maxFieldSize;
+
         CreateField();
         GenerateField();
-                //Destroy(GameObject.Find("gameCell(Clone)"));
-        //fieldCell = GameObject.Find("gameCell(Clone)");
-        //System.Array.Clear(field, 0, field.Length);
-
-        //Debug.Log(GameObject.Find("gameCell(Clone)"));
-        //CreateField();
-        //}
     }
 
     // очистка поля и подготовка к новой игре

@@ -18,15 +18,15 @@ public class FieldSizeController : MonoBehaviour
     public void moreFieldSize()
     {
         Field.Instance.FieldSize++;
-        SetFieldSize(Field.Instance.FieldSize);
         Field.Instance.ClearField();
+        SetFieldSize(Field.Instance.FieldSize);
     }
 
     public void lessFieldSize()
     {
         Field.Instance.FieldSize--;
-        SetFieldSize(Field.Instance.FieldSize);
         Field.Instance.ClearField();
+        SetFieldSize(Field.Instance.FieldSize);
     }
 
     public void AddFieldSize(int fieldSize)
