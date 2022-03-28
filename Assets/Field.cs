@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Field : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class Field : MonoBehaviour
     private Cell cellPref; // префаб плитки
     [SerializeField]
     private RectTransform rt;
+    private Canvas rtParent;
 
     private Cell[,] field; // храним всё поле в двумерном массиве
 
@@ -26,6 +28,7 @@ public class Field : MonoBehaviour
 
     private void Start()
     {
+        rtParent = GetComponentInParent<Canvas>();
         SwipeController.SwipeEvent += OnInput;
 
         cellPref.width = CellSize; // устанавливаем размер ячеек, если не задано, то берётся из инспектора
@@ -201,15 +204,19 @@ public class Field : MonoBehaviour
     private void CreateField()
     {
         field = new Cell[FieldSize, FieldSize]; //инициализируем массив
-        float fieldWidth = 1000.0f;
-            //FieldSize * (CellSize + Spacing) + Spacing; // считаем ширину поля
-        if(fieldWidth >= 1000) // считаем размер клеток, когда размер поля максимально
-        {
-            fieldWidth = 1000f;
-            Spacing = fieldWidth * 0.02f;
-            CellSize = (fieldWidth - Spacing ) / FieldSize - Spacing ;
-            cellPref.width = CellSize ;
-        }
+        float fieldWidth = rtParent.renderingDisplaySize.x-53.2f;
+            //cn.referenceResolution.x;
+        //FieldSize * (CellSize + Spacing) + Spacing; // считаем ширину поля
+
+        //Debug.Log(rtParent.renderingDisplaySize); //<==== найти размер канваса!!!
+
+        //if (fieldWidth >= 1000 ) // считаем размер клеток, когда размер поля максимально
+        //{
+            //fieldWidth = 1000f;
+        Spacing = fieldWidth * 0.02f;
+        CellSize = (fieldWidth - Spacing ) / FieldSize - Spacing ;
+        cellPref.width = CellSize ;
+        //}
 
         rt.sizeDelta = new Vector2(fieldWidth, fieldWidth); // устанавливаем размер на canvas
 
@@ -275,7 +282,7 @@ public class Field : MonoBehaviour
         if (emptyCells.Count == 0)
             throw new System.Exception("There is no any empty cell!"); // проверка на пустые клетки
 
-        int value = Random.Range(0, 10) == 0 ? 2 : 1; // 90% номинал 2, 10% номинал 4
+        int value = Random.Range(0, 10) == 0 ? 2: 1; // 90% номинал 2, 10% номинал 4
         var cell = emptyCells[Random.Range(0, emptyCells.Count)]; // заносим значения в рандомную плитку
         cell.SetValue(cell.X, cell.Y, value, false); // передаём false, чтобы не обновлять плитку визуально
 
