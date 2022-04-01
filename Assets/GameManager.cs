@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,7 +16,10 @@ public class GameManager : MonoBehaviour
     private TextMeshProUGUI pointsText; // отображает кол-во набранных очков
     [SerializeField]
     private TextMeshProUGUI hightScoreResultText; // отображает наименьшее кол-во набранных очков при победе
+    [SerializeField]
+    private GameObject hightScoreTablePanel;
 
+    //[SerializeField]  private hightScoreTable hightScoreTable;
     public static int FieldSize { get; private set; } // хранит размер поля
     public static int Points { get; private set; } // хранит кол-во очков
 
@@ -28,12 +32,22 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
             Instance = this;
     }
-    void Start()
+    private void Start()
     {
+        hightScoreTablePanel.SetActive(false);
         StartGame();
         SetFieldSize(Field.Instance.FieldSize);
     }
-
+    private void Update()
+    {
+        if (hightScoreTablePanel.active)
+        {
+            if (Input.GetTouch(0).phase == TouchPhase.Stationary)
+                hightScoreTableWindowOFF();
+            //if(Input.GetMouseButtonDown(0))
+            //    hightScoreTableWindowOFF();
+        }
+    }
     public void Win()
     {
         GameStarted = false;
@@ -49,6 +63,20 @@ public class GameManager : MonoBehaviour
         gameResult.text = "You Lose!";
     }
 
+    public void hightScoreTableWindow()
+    {
+        Time.timeScale = 0;
+        FindObjectOfType<hightScoreTable>().Awake();
+        hightScoreTablePanel.SetActive(true);
+    }
+
+    public void hightScoreTableWindowOFF()
+    {
+        Time.timeScale = 1;
+        hightScoreTablePanel.SetActive(false);
+        FindObjectOfType<hightScoreTable>().Destroy();
+    }
+
     private void hightScoreResult()
     {
         if (HightSCorePoints == 0)
@@ -56,11 +84,17 @@ public class GameManager : MonoBehaviour
             //Debug.Log("HightSCorePoints: " + HightSCorePoints + "<==>" + "Points: " + Points);
             HightSCorePoints = Points;
             hightScoreResultText.text = Points.ToString();
+
+            FindObjectOfType<hightScoreTable>().LoadTableOrDefault();
+            FindObjectOfType<hightScoreTable>().AddHightScoreAndSave(HightSCorePoints, "Player");
         } else if (HightSCorePoints > Points) 
         {
             //Debug.Log("HightSCorePoints: " + HightSCorePoints + "<==>" + "Points: " + Points);
             HightSCorePoints = Points;
             hightScoreResultText.text = Points.ToString();
+
+            FindObjectOfType<hightScoreTable>().LoadTableOrDefault();
+            FindObjectOfType<hightScoreTable>().AddHightScoreAndSave(HightSCorePoints, "Player");
         }
     }
 
@@ -92,6 +126,7 @@ public class GameManager : MonoBehaviour
         Field.Instance.FieldSize++;
         Field.Instance.ClearField();
         SetPoints(0); // обнуляем очки перед началом игры
+        gameResult.text = "";
         SetFieldSize(Field.Instance.FieldSize);
     }
 
@@ -100,6 +135,7 @@ public class GameManager : MonoBehaviour
         Field.Instance.FieldSize--;
         Field.Instance.ClearField();
         SetPoints(0); // обнуляем очки перед началом игры
+        gameResult.text = "";
         SetFieldSize(Field.Instance.FieldSize);
     }
 

@@ -19,7 +19,9 @@ public class Field : MonoBehaviour
     private Cell cellPref; // префаб плитки
     [SerializeField]
     private RectTransform rt;
-    private Canvas rtParent;
+    float canvasWidth;
+    [SerializeField]
+    private RectTransform cancas;
 
     private Cell[,] field; // храним всё поле в двумерном массиве
 
@@ -28,7 +30,11 @@ public class Field : MonoBehaviour
 
     private void Start()
     {
-        rtParent = GetComponentInParent<Canvas>();
+        //float canvasHeight = rt.GetComponent<RectTransform>().rect.height;
+        canvasWidth = rt.GetComponent<RectTransform>().rect.width;
+        //gameObject.GetComponent<RectTransform>();
+
+        //GetComponentInParent<RectTransform>();
         SwipeController.SwipeEvent += OnInput;
 
         cellPref.width = CellSize; // устанавливаем размер ячеек, если не задано, то берётся из инспектора
@@ -204,21 +210,28 @@ public class Field : MonoBehaviour
     private void CreateField()
     {
         field = new Cell[FieldSize, FieldSize]; //инициализируем массив
-        float fieldWidth = rtParent.renderingDisplaySize.x-53.2f;
-            //cn.referenceResolution.x;
+        float fieldWidth = canvasWidth; 
+            //canvasWidth;
+            //rtParent.renderingDisplaySize.x;
+        //Debug.Log(fieldWidth);
+        //cn.referenceResolution.x;
         //FieldSize * (CellSize + Spacing) + Spacing; // считаем ширину поля
 
         //Debug.Log(rtParent.renderingDisplaySize); //<==== найти размер канваса!!!
 
-        //if (fieldWidth >= 1000 ) // считаем размер клеток, когда размер поля максимально
-        //{
-            //fieldWidth = 1000f;
+        //if (fieldWidth != canvasWidth) // считаем размер клеток, когда размер поля максимально
+        //    fieldWidth = canvasWidth;
+
         Spacing = fieldWidth * 0.02f;
         CellSize = (fieldWidth - Spacing ) / FieldSize - Spacing ;
         cellPref.width = CellSize ;
         //}
 
-        rt.sizeDelta = new Vector2(fieldWidth, fieldWidth); // устанавливаем размер на canvas
+        rt.sizeDelta = new Vector2(canvasWidth, canvasWidth); // устанавливаем размер на canvas
+        //Vector2 asd = new Vector2(canvasWidth, canvasWidth);
+        //gameObject.rect
+        //fieldWidth1.pos = new Vector2(canvasWidth, canvasWidth);
+        //gameObject.transform.rect
 
         float startX = -(fieldWidth / 2) + (CellSize / 2) + Spacing; // нач.позиции для первой клетки
         float startY =  (fieldWidth / 2) - (CellSize / 2) - Spacing;
