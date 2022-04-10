@@ -13,7 +13,7 @@ public class hightScoreTable : MonoBehaviour
     private Transform entryWindow;
     private List<Transform> hightScoreEntryTransformList;
 
-    private const int MaxScoresInTable = 10; // максимальное кол-во рекордов в таблице
+    [SerializeField] private int MaxScoresInTable = 10; // максимальное кол-во рекордов в таблице
     private const string ScoreTableSaveKey = "ScoreTable.saveData"; // имя для сохранения в PlayerPrefs
 
     [Space]
@@ -34,16 +34,7 @@ public class hightScoreTable : MonoBehaviour
         // если таблица пустая, то добавляем тестовый сейв
         if (_scoreTable.IsEmpty)
         {
-            AddHightScoreAndSave(score: 10000, name: "Player");
-            AddHightScoreAndSave(score: 10000, name: "Player");
-            AddHightScoreAndSave(score: 10000, name: "Player");
-            AddHightScoreAndSave(score: 10000, name: "Player");
-            AddHightScoreAndSave(score: 10000, name: "Player");
-            AddHightScoreAndSave(score: 10000, name: "Player");
-            AddHightScoreAndSave(score: 10000, name: "Player");
-            AddHightScoreAndSave(score: 10000, name: "Player");
-            AddHightScoreAndSave(score: 10000, name: "Player");
-            AddHightScoreAndSave(score: 10000, name: "Player");
+            AddHightScoreAndSave(score: 1, name: "Player");
         }
         // обновляем UI таблицы
         RedrawTableUI();
@@ -73,7 +64,7 @@ public class hightScoreTable : MonoBehaviour
     private void SortAndCutTable()
     { // корректировка таблицы
         _scoreTable.ScoresList = _scoreTable.ScoresList //-> сортировка от меньшего к большему OrderBy
-                                                        .OrderBy(i => i.Score) //-> сортировка от большего к меньшему OrderByDescending
+                                                        .OrderByDescending(i => i.Score) //-> сортировка от большего к меньшему OrderByDescending
                                                         .Take(MaxScoresInTable) //-> оставляем только нужное кол-во рекордов
                                                         .ToList();
     }

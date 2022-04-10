@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;
 
+using UnityEngine.UI;
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
@@ -18,6 +20,8 @@ public class GameManager : MonoBehaviour
     private TextMeshProUGUI hightScoreResultText; // отображает наименьшее кол-во набранных очков при победе
     [SerializeField]
     private GameObject hightScoreTablePanel;
+    [SerializeField]
+    private GameObject inputWindow;
 
     //[SerializeField]  private hightScoreTable hightScoreTable;
     public static int FieldSize { get; private set; } // хранит размер поля
@@ -26,6 +30,11 @@ public class GameManager : MonoBehaviour
     public static int HightSCorePoints { get; set; } // хранит наименьшее кол-во очков при победе
     public static bool GameStarted { get; private set; } // флаг определяющий начало игры
 
+    public string playerName = "Player";
+
+    private int clickCounter = 0;
+
+    [SerializeField] private Text text;
 
     private void Awake()
     {
@@ -42,12 +51,38 @@ public class GameManager : MonoBehaviour
     {
         if (hightScoreTablePanel.active)
         {
-            if (Input.GetTouch(0).phase == TouchPhase.Stationary)
+            if (Input.GetTouch(0).phase == TouchPhase.Began)
+            {
+                if (!inputWindow.active)
+                    clickCounter++;
+                text.text = clickCounter.ToString();
+            }
+            if (clickCounter > 1)
+            {
                 hightScoreTableWindowOFF();
-            //if(Input.GetMouseButtonDown(0))
+                clickCounter = 0;
+            }
+            //if (Input.GetMouseButtonDown(0))
+            //{
+            //    if (!inputWindow.active)
+            //        clickCounter++;
+            //    Debug.Log(clickCounter);
+            //}
+
+            //if (clickCounter > 1)
+            //{
             //    hightScoreTableWindowOFF();
+            //    clickCounter = 0;
+            //}
         }
     }
+
+
+    public void showInputWindow()
+    {
+        inputWindow.SetActive(true);
+    }
+
     public void Win()
     {
         GameStarted = false;
@@ -61,6 +96,7 @@ public class GameManager : MonoBehaviour
     {
         GameStarted = false;
         gameResult.text = "You Lose!";
+        hightScoreResult();
     }
 
     public void hightScoreTableWindow()
@@ -86,15 +122,19 @@ public class GameManager : MonoBehaviour
             hightScoreResultText.text = Points.ToString();
 
             FindObjectOfType<hightScoreTable>().LoadTableOrDefault();
-            FindObjectOfType<hightScoreTable>().AddHightScoreAndSave(HightSCorePoints, "Player");
-        } else if (HightSCorePoints > Points) 
+            FindObjectOfType<hightScoreTable>().AddHightScoreAndSave(HightSCorePoints, playerName);
+        } else if (HightSCorePoints < Points) 
         {
             //Debug.Log("HightSCorePoints: " + HightSCorePoints + "<==>" + "Points: " + Points);
             HightSCorePoints = Points;
             hightScoreResultText.text = Points.ToString();
 
             FindObjectOfType<hightScoreTable>().LoadTableOrDefault();
-            FindObjectOfType<hightScoreTable>().AddHightScoreAndSave(HightSCorePoints, "Player");
+            FindObjectOfType<hightScoreTable>().AddHightScoreAndSave(HightSCorePoints, playerName);
+        } else if(HightSCorePoints > Points)
+        {
+            FindObjectOfType<hightScoreTable>().LoadTableOrDefault();
+            FindObjectOfType<hightScoreTable>().AddHightScoreAndSave(Points, playerName);
         }
     }
 

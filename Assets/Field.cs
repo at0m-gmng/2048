@@ -27,6 +27,9 @@ public class Field : MonoBehaviour
 
     private bool anyCellMoved; // перемещалась ли плитка
 
+    [SerializeField] private int min_nominal_value = 1;
+    [SerializeField] private int max_nominal_value = 2;
+
 
     private void Start()
     {
@@ -271,6 +274,9 @@ public class Field : MonoBehaviour
     // очистка поля и подготовка к новой игре
     public void GenerateField()
     {
+        InitCellsCount = (int)(FieldSize /2);
+        //Debug.Log(InitCellsCount);
+
         if (field == null)
             CreateField();
 
@@ -295,7 +301,7 @@ public class Field : MonoBehaviour
         if (emptyCells.Count == 0)
             throw new System.Exception("There is no any empty cell!"); // проверка на пустые клетки
 
-        int value = Random.Range(0, 10) == 0 ? 2: 1; // 90% номинал 2, 10% номинал 4
+        int value = Random.Range(0, 10) == 0 ? max_nominal_value : min_nominal_value; // 90% номинал 2, 10% номинал 4
         var cell = emptyCells[Random.Range(0, emptyCells.Count)]; // заносим значения в рандомную плитку
         cell.SetValue(cell.X, cell.Y, value, false); // передаём false, чтобы не обновлять плитку визуально
 

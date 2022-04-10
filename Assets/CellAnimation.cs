@@ -4,20 +4,20 @@ using TMPro;
 using DG.Tweening;
 using System.Collections;
 
-//висит на объекте который создаётся и перемещается (анимация)
+//РІРёСЃРёС‚ РЅР° РѕР±СЉРµРєС‚Рµ РєРѕС‚РѕСЂС‹Р№ СЃРѕР·РґР°С‘С‚СЃСЏ Рё РїРµСЂРµРјРµС‰Р°РµС‚СЃСЏ (Р°РЅРёРјР°С†РёСЏ)
 public class CellAnimation : MonoBehaviour
 {
-    // для идентичности базовой плитке будем изменять значение очков и цвет
+    // РґР»СЏ РёРґРµРЅС‚РёС‡РЅРѕСЃС‚Рё Р±Р°Р·РѕРІРѕР№ РїР»РёС‚РєРµ Р±СѓРґРµРј РёР·РјРµРЅСЏС‚СЊ Р·РЅР°С‡РµРЅРёРµ РѕС‡РєРѕРІ Рё С†РІРµС‚
     [SerializeField]
     private Image image;
     [SerializeField]
     private TextMeshProUGUI points;
 
-    // для длительности анимации, перемещения и появления
+    // РґР»СЏ РґР»РёС‚РµР»СЊРЅРѕСЃС‚Рё Р°РЅРёРјР°С†РёРё, РїРµСЂРµРјРµС‰РµРЅРёСЏ Рё РїРѕСЏРІР»РµРЅРёСЏ
     private float moveTime = .1f;
     private float appearTime = .05f;
 
-    private Sequence sequence; // переменная для очереди
+    private Sequence sequence; // РїРµСЂРµРјРµРЅРЅР°СЏ РґР»СЏ РѕС‡РµСЂРµРґРё
 
     RectTransform rt;
     private void Start()
@@ -25,28 +25,35 @@ public class CellAnimation : MonoBehaviour
         rt = GetComponent<RectTransform>();
         rt.sizeDelta = new Vector2(Field.Instance.CellSize, Field.Instance.CellSize);
     }
-
-    // показывает анимация при перемещении из одной плитки в другую
+    private void Update()
+    {
+        if (gameObject)
+        {
+            Destroy(gameObject, .25f);
+        }
+    }
+    
+    // РїРѕРєР°Р·С‹РІР°РµС‚ Р°РЅРёРјР°С†РёСЏ РїСЂРё РїРµСЂРµРјРµС‰РµРЅРёРё РёР· РѕРґРЅРѕР№ РїР»РёС‚РєРё РІ РґСЂСѓРіСѓСЋ
     public void Move(Cell from, Cell to, bool isMerging)
     {
-        from.CancelAnimation(); //останавливаем анимацию у плитки, из которой двигаемся;
+        from.CancelAnimation(); //РѕСЃС‚Р°РЅР°РІР»РёРІР°РµРј Р°РЅРёРјР°С†РёСЋ Сѓ РїР»РёС‚РєРё, РёР· РєРѕС‚РѕСЂРѕР№ РґРІРёРіР°РµРјСЃСЏ;
         to.SetAnimation(this);
 
-        //маскируем объект анимации под ячейку
+        //РјР°СЃРєРёСЂСѓРµРј РѕР±СЉРµРєС‚ Р°РЅРёРјР°С†РёРё РїРѕРґ СЏС‡РµР№РєСѓ
         image.color = ColorManager.Instance.CellColor[from.Value];
         points.text = from.Points.ToString();
         points.color = from.Value <= 2 ? ColorManager.Instance.PointsDarkColor : ColorManager.Instance.PointsLightColor;
 
-        //перемещаемся в позицию ячейки, из которой выезжаем
+        //РїРµСЂРµРјРµС‰Р°РµРјСЃСЏ РІ РїРѕР·РёС†РёСЋ СЏС‡РµР№РєРё, РёР· РєРѕС‚РѕСЂРѕР№ РІС‹РµР·Р¶Р°РµРј
         transform.position = from.transform.position;
 
-        sequence = DOTween.Sequence(); // инициализируем очередь и добавляем перемещение в позицию будущей плитки
-        sequence.Append(transform.DOMove(to.transform.position, moveTime).SetEase(Ease.InOutQuad)); //InOutQuad для менее линейной анимации
+        sequence = DOTween.Sequence(); // РёРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј РѕС‡РµСЂРµРґСЊ Рё РґРѕР±Р°РІР»СЏРµРј РїРµСЂРµРјРµС‰РµРЅРёРµ РІ РїРѕР·РёС†РёСЋ Р±СѓРґСѓС‰РµР№ РїР»РёС‚РєРё
+        sequence.Append(transform.DOMove(to.transform.position, moveTime).SetEase(Ease.InOutQuad)); //InOutQuad РґР»СЏ РјРµРЅРµРµ Р»РёРЅРµР№РЅРѕР№ Р°РЅРёРјР°С†РёРё
 
         if (isMerging)
-        {   
-            // панелька немного увеличив, меняет своё значение на новое и возращает исходный размер
-            sequence.AppendCallback(() => 
+        {
+            // РїР°РЅРµР»СЊРєР° РЅРµРјРЅРѕРіРѕ СѓРІРµР»РёС‡РёРІ, РјРµРЅСЏРµС‚ СЃРІРѕС‘ Р·РЅР°С‡РµРЅРёРµ РЅР° РЅРѕРІРѕРµ Рё РІРѕР·СЂР°С‰Р°РµС‚ РёСЃС…РѕРґРЅС‹Р№ СЂР°Р·РјРµСЂ
+            sequence.AppendCallback(() =>
             {
                 image.color = ColorManager.Instance.CellColor[to.Value];
                 points.text = to.Points.ToString();
@@ -56,14 +63,14 @@ public class CellAnimation : MonoBehaviour
             sequence.Append(transform.DOScale(1.2f, appearTime));
             sequence.Append(transform.DOScale(1f, appearTime));
         }
-        sequence.AppendCallback(() => // отображаем новое значение плитки, в которую вливаемся
+        sequence.AppendCallback(() => // РѕС‚РѕР±СЂР°Р¶Р°РµРј РЅРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РїР»РёС‚РєРё, РІ РєРѕС‚РѕСЂСѓСЋ РІР»РёРІР°РµРјСЃСЏ
         {
             to.UpdateCell();
             Destroy();
         });
     }
 
-    // вызывается, когда на поле появляется новая рандомная плитка
+    // РІС‹Р·С‹РІР°РµС‚СЃСЏ, РєРѕРіРґР° РЅР° РїРѕР»Рµ РїРѕСЏРІР»СЏРµС‚СЃСЏ РЅРѕРІР°СЏ СЂР°РЅРґРѕРјРЅР°СЏ РїР»РёС‚РєР°
     public void Appear(Cell cell)
     {
         cell.CancelAnimation();
@@ -87,16 +94,10 @@ public class CellAnimation : MonoBehaviour
         });
     }
 
-    // останавливает анимацию и уничтожает объект на сцене
+    // РѕСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ Р°РЅРёРјР°С†РёСЋ Рё СѓРЅРёС‡С‚РѕР¶Р°РµС‚ РѕР±СЉРµРєС‚ РЅР° СЃС†РµРЅРµ
     public void Destroy()
     {
-        sequence.Kill(); //остановит процесс анимации
+        sequence.Kill(); //РѕСЃС‚Р°РЅРѕРІРёС‚ РїСЂРѕС†РµСЃСЃ Р°РЅРёРјР°С†РёРё
         Destroy(gameObject);
-
-        // частино удаляем лишние объекты при быстром изменениии размерности
-        GameObject replay = GameObject.Find("gameCellAnimation(Clone)");
-        if (replay)
-            Destroy(replay);
     }
-
 }
